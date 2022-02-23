@@ -13,7 +13,6 @@
 	<div
 		class="menu"
 		class:active={$visible}
-		{...$$restProps}
 	>
 		<slot />
 	</div>
@@ -22,5 +21,7 @@
 <style lang="scss">
 	.menu {
 		position: relative;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

@@ -1,0 +1,81 @@
+generator client {
+	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "postgresql"
+	url = env("DATABASE_URL")
+}
+
+model User {
+	@@map(name: "users")
+
+	id String @id @default(cuid())
+	discordId String @unique
+
+	name String @db.Text()
+	avatar String
+
+	moderator Boolean?
+	admin Boolean?
+	developer Boolean?
+
+	presets Preset[]
+	themes Theme[]
+	addons Addon[]
+}
+
+model Theme {
+	@@map(name: "themes")
+
+	id Int @id @default(autoincrement())
+	name String
+	previewUrl String
+	thumbnail String
+	meta Json
+	imports String[]
+	fonts String[]
+	variables Json
+	hiddenVars Json?
+	varGroups String[]
+	addons String[]
+
+	userId String
+	user User @relation(fields: [userId], references: [id])
+
+	presets Preset[]
+}
+model Addon {
+	@@map(name: "addons")
+
+	id Int @id @default(autoincrement())
+
+	name String
+	description String
+	imports Json
+	selector String
+	previewUrl Json
+	group String
+	use Boolean
+	variables Json
+	hiddenVars Json
+
+	userId String
+	user User @relation(fields: [userId], references: [id])
+}
+
+model Preset {
+	@@map(name: "presets")
+
+	id String @id @default(cuid())
+
+	name String
+	tags String[]
+	data Json
+
+	userId String
+	user User @relation(fields: [userId], references: [id])
+
+	themeId Int
+	theme Theme @relation(fields: [themeId], references: [id])
+}

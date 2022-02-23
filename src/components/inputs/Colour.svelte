@@ -106,10 +106,10 @@
 	{#key value}
 		<div class="colour">
 			<div bind:this={pickrEl}></div>
-			<div class="colour-info">
-				<p class="colour-title">{title}</p>
+			<div class="info">
+				<p class="title">{title}</p>
 				{#if hint}
-					<small class="colour-hint">{hint}</small>
+					<small class="hint">{hint}</small>
 				{/if}
 			</div>
 		</div>
@@ -120,13 +120,13 @@
 	.colour {
 		display: flex;
 		align-items: center;
-		&-info {
-			margin-left: rem(8);
-		}
-		&-hint {
-			display: block;
-			font-size: rem(13);
-			color: var(--text-tertiary);
-		}
+	}
+	.info {
+		margin-left: 8px;
+	}
+	.hint {
+		display: block;
+		font-size: 13px;
+		color: var(--text-tertiary);
 	}
 </style>

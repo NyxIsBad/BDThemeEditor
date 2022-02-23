@@ -6,69 +6,37 @@
 
 	let iframe: HTMLIFrameElement;
 
-	const onLoad = () => {
-		let getIframe = iframe.contentDocument.body.parentElement;
-
-		$preview = getIframe;
-		getIframe.querySelector('#import').textContent = `@import url("${url}")`;
-
+	const onLoad = (): void => {
+		$preview = iframe;
 		$loaded = true;
 	}
 	onDestroy(() => $loaded = false);
 </script>
 
 <template>
-	<div class="preview">
-		{#if !$loaded}
-			<div class="loader">
-				<div class="spinner"></div>
-			</div>
-		{/if}
+	<div class="container">
 		<iframe
 			bind:this={iframe}
 			on:load={onLoad}
-			src="/preview/index.html?id={new Date().getTime()}"
-			title="preview"
+			src="https://gibbu.github.io/ThemePreview?file={url}"
 			frameborder="0"
+			title=""
+			height="500"
+			width="1500"
 		/>
 	</div>
 </template>
 
 <style lang="scss">
-	.preview {
+	.container {
 		width: 100%;
 		height: 100%;
-		padding: rem(16);
+		padding: 16px;
 		position: relative;
 		iframe {
 			width: 100%;
 			height: 100%;
-		}
-	}
-	.loader {
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		background: var(--c1);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 1;
-	}
-	.spinner {
-		width: rem(64);
-		height: rem(64);
-		border: rem(2) solid var(--text-primary);
-		border-top-color: transparent;
-		border-radius: 50%;
-		animation: spinner 1s linear infinite;
-	}
-
-	@keyframes spinner {
-		to {
-			transform: rotate(360deg);
+			border: 1px solid var(--border);
 		}
 	}
 </style>

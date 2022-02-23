@@ -4,7 +4,7 @@
 
 
 	// Components
-	import {Input} from '$components/common/Input';
+	import {Input} from '$components/common';
 
 	// Required input vars
 	export let variable: string;
@@ -32,41 +32,39 @@
 </script>
 
 <template>
-	<header class="option-header">
-		<p class="option-title">
+	<header class="header">
+		<p class="title">
 			{title}
-			<small class="option-value">({value+unit})</small>
+			<small class="value">({value+unit})</small>
 		</p>
 		{#if hint}
-			<div class="option-hint">{hint}</div>
+			<div class="hint">{hint}</div>
 		{/if}
 	</header>
-	<div class="option-body">
+	<div class="body">
 		<Input inputType="number" {min} {step} bind:value on:input={update} {error} />
 		{#if error}
-			<small class="option-error">{error}</small>
+			<small class="error">{error}</small>
 		{/if}
 	</div>
 </template>
 
 <style lang="scss">
-	.option {
-		&-header {
-			margin-bottom: rem(8);
-		}
-		&-error {
-			color: hsl(var(--red));
-			font-size: rem(12);
-			margin-top: rem(4);
-		}
-		&-value {
-			color: var(--text-tertiary);
-			margin-left: rem(4);
-		}
-		&-hint {
-			display: block;
-			font-size: rem(13);
-			color: var(--text-tertiary);
-		}
+	.header {
+		margin-bottom: 8px;
+	}
+	.error {
+		color: hsl(var(--red));
+		font-size: 12px;
+		margin-top: 4px;
+	}
+	.value {
+		color: var(--text-tertiary);
+		margin-left: 4px;
+	}
+	.hint {
+		display: block;
+		font-size: 13px;
+		color: var(--text-tertiary);
 	}
 </style>

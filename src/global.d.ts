@@ -1,7 +1,15 @@
 /// <reference types="@sveltejs/kit" />
 
-declare namespace svelte.JSX {
-	interface HTMLAttributes<T> {
-		onclickedOutside?: () => void
+declare namespace App {
+	interface Session {
+		auth: {
+			id: string,
+			discordId: string,
+			name: string,
+			avatar: string,
+			moderator: boolean,
+			admin: boolean,
+			developer: boolean
+		} | null
 	}
 }

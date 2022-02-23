@@ -13,6 +13,6 @@
 	.modal-body {
 		overflow: hidden auto;
 		max-height: 65vh;
-		padding: 0 rem(24) rem(24);
+		padding: 0 24px 24px;
 	}
 </style>

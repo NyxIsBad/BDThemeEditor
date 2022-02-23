@@ -1,48 +1,82 @@
 <script lang="ts">
 	import clickOutside from '$lib/clickOutside';
+	import {browser} from '$app/env';
 	import {getContext} from 'svelte';
 	import type {Writable} from 'svelte/store';
 
+	/**
+	 * Position of the dropdown.  
+	 * Default = `right`.
+	 */
+	export let position: 'left' | 'right' = 'right';
+
 	let visible: Writable<boolean> = getContext('visible');
-	let menuBtn: Writable<HTMLElement> = getContext('menuBtn');
+	let menuBtn: Writable<HTMLElement|null> = getContext('menuBtn');
+
+	const keyActions = (e: KeyboardEvent): void => {
+		if (e.key === 'Escape') $visible = false;
+		if ($visible && e.key === 'Enter') $menuBtn.focus();
+	}
+
+	let triangleX: number = 0;
+	$: if ($visible && browser) {
+		window.addEventListener('keyup', keyActions);
+		triangleX = $menuBtn.getBoundingClientRect().width / 2 - 7;
+	} else if (!$visible && browser) {
+		window.addEventListener('keyup', keyActions);
+	}
 </script>
 
 <template>
-	{#if $menuBtn}
+	{#if $menuBtn && $visible}
 		<div
-			class="menu-dropdown"
-			role="menu"
-			aria-expanded={$visible}
-			use:clickOutside={$menuBtn}
-			on:clickedOutside={() => $visible = false}
+			class="dropdown {position}"
+			use:clickOutside={{
+				exclude: $menuBtn,
+				outside: () => $visible = false
+			}}
 		>
-			<slot />
+			<div class="triangle" style="transform: translateX({position === 'left' ? '-' : ''}{triangleX.toFixed()}px) rotate(45deg);"></div>
+			<div class="content">
+				<slot />
+			</div>
 		</div>
 	{/if}
 </template>
 
 <style lang="scss">
-	.menu-dropdown {
-		width: rem(200);
+	.dropdown {
+		width: 280px;
 		position: absolute;
-		top: 100%;
-		right: 0;
-		background: var(--c0);
-		border: rem(1) solid var(--border);
-		border-radius: rem(4);
-		padding: rem(8);
-		opacity: 0;
-		visibility: hidden;
-		overflow: hidden;
-		transform: scale(.95);
-		transform-origin: top right;
-		transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
-		z-index: 3;
-		box-shadow: 0 3px 7px hsl(0 0% 0% / .1), 0 5px 28px hsl(0 0% 0% / .25);
-		&[aria-expanded="true"] {
-			opacity: 1;
-			visibility: visible;
-			transform: scale(1);
+		background: var(--bg-content);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 0 8px;
+		top: calc(100% + 16px);
+		box-shadow: var(--elevation-close);
+		&.right {
+			transform-origin: top left;
+			left: 0;
+			.triangle {
+				left: 0;
+			}
 		}
+		&.left {
+			transform-origin: top right;
+			right: 0;
+			.triangle {
+				right: 0;
+			}
+		}
+	}
+	.triangle {
+		position: absolute;
+		top: -6px;
+		width: 10px;
+		height: 10px;
+		transform: rotate(45deg);
+		background: var(--bg-content);
+		border-top: 1px solid var(--border);
+		border-left: 1px solid var(--border);
 	}
 </style>

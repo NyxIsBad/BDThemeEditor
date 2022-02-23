@@ -8,10 +8,10 @@
 	.modal-footer {
 		display: flex;
 		justify-content: flex-end;
-		border-top: rem(1) solid var(--border);
-		gap: rem(8);
+		border-top: 1px solid var(--border);
+		gap: 8px;
 		background: var(--bg-alt);
-		padding: rem(16) rem(24);
-		border-radius: 0 0 rem(4) rem(4);
+		padding: 16px 24px;
+		border-radius: 0 0 4px 4px;
 	}
 </style>

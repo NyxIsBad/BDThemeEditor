@@ -3,7 +3,7 @@
 	const dispatch = createEventDispatcher();
 
 	// Components
-	import {Select} from '$components/common/Select';
+	import {Select} from '$components/common';
 
 	// Required input vars
 	export let variable: string;
@@ -23,26 +23,19 @@
 </script>
 
 <template>
-	<header class="option-header">
-		<p class="option-title">{title}</p>
+	<header class="header">
+		<p class="title">{title}</p>
 		{#if hint}
-			<small class="option-hint">{hint}</small>
+			<small class="hint">{hint}</small>
 		{/if}
 	</header>
-	<div class="option-body">
+	<div class="body">
 		<Select {options} {value} custom={customValue} on:update={update} />
 	</div>
 </template>
 
 <style lang="scss">
-	.option {
-		&-header {
-			margin-bottom: rem(8);
-		}
-		&-hint {
-			display: block;
-			font-size: rem(13);
-			color: var(--text-tertiary);
-		}
+	.header {
+		margin-bottom: 8px;
 	}
 </style>

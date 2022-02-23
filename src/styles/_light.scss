@@ -1,0 +1,24 @@
+.theme-light {
+	--accent-text: 159 60% 56%;
+
+	--bg-main: hsl(0 0% 90%);
+	--bg-alt: hsl(0 0% 88%);
+	--bg-content: hsl(0 0% 95%);
+	--bg-content-alt: hsl(0 0% 100%);
+
+	--border: hsl(0 0% 85%);
+
+	--control-bg: hsl(0 0% 85%);
+	--control-bg-hover: hsl(0 0% 90%);
+	--control-border: hsl(0 0% 0% / .15);
+	--control-border-hover: hsl(0 0% 0% / .25);
+
+	--interactive-hover: hsl(0 0% 88%);
+	--interactive-active: hsl(0 0% 100%);
+
+	--elevation-close: 0 4px 15px hsl(0 0% 0% / .15);
+
+	--text-primary: hsl(0 0% 10%);
+	--text-secondary: hsl(0 0% 20%);
+	--text-tertiary: hsl(0 0% 40%);
+}

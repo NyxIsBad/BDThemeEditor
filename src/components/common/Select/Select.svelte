@@ -1,21 +1,23 @@
 <script lang="ts">
-	import {Selector, Check} from '$components/common/Icon';
 	import clickOutside from '$lib/clickOutside';
 	import {createEventDispatcher} from 'svelte';
+	import {Icon} from '@steeze-ui/svelte-icon';
+	import {Selector, Check} from '@steeze-ui/heroicons';
 
 	const dispatch = createEventDispatcher();
 
-	import {Input} from '$components/common/Input';
+	import {Input} from '$components/common';
 
 	// Types
 	interface Option {
 		label: string,
-		value: string
+		value: string | boolean | number
 	}
 
 	export let options: Option[]
-	export let value: string = '';
+	export let value: string | boolean | number = '';
 	export let custom: boolean = false;
+	export let long: boolean = false;
 
 	// Values
 	$: selected = options.find(el => el.value === value) || options[0];
@@ -41,27 +43,32 @@
 		hide();
 	}
 
-	const update = (value: string): void => {
+	const update = (value: string | boolean | number): void => {
 		dispatch('update', value);
 	}
 </script>
 
 <template>
-	<div class="select">
-		<button bind:this={selectBtn} class="btn" on:click={toggle}>
+	<div class="select" class:long>
+		<button type="button" bind:this={selectBtn} class="btn" on:click={toggle}>
 			<span class="btn-text">{selected.label}</span>
 			<div class="btn-icon">
-				<Selector />
+				<Icon src={Selector} size="18" />
 			</div>
 		</button>
 		{#if visible}
-			<div class="dropdown" use:clickOutside={selectBtn} on:clickedOutside={hide}>
+			<div
+				class="dropdown"
+				use:clickOutside={{
+					exclude: selectBtn,
+					outside: hide
+				}}>
 				{#each options as option}
 					<button class="option" class:active={selected.value === option.value} on:click={() => setOption(option)}>
 						<span class="option-label">{option.label}</span>
 						{#if selected.value === option.value}
 							<div class="option-check">
-								<Check />
+								<Icon src={Check} size="18" />
 							</div>
 						{/if}
 					</button>
@@ -72,7 +79,7 @@
 						<span class="option-label">Custom value</span>
 						{#if selected.value === 'custom'}
 							<div class="option-check">
-								<Check />
+								<Icon src={Check} size="18" />
 							</div>
 						{/if}
 					</button>
@@ -90,8 +97,11 @@
 <style lang="scss">
 	.select {
 		position: relative;
+		&.long {
+			width: 100%;
+		}
 		&-custom {
-			margin-top: rem(8);
+			margin-top: 8px;
 		}
 	}
 	.btn {
@@ -99,43 +109,44 @@
 		align-items: center;
 		justify-content: space-between;
 		font-weight: 500;
-		border-radius: rem(4);
+		border-radius: 4px;
 		transition: .15s ease background, .15s ease box-shadow, .15s ease color;
 		user-select: none;
 		line-height: normal;
-		font-size: rem(14);
-		height: rem(38);
-		padding: 0 rem(12);
-		background: var(--c4);
+		font-size: 14px;
+		height: 38px;
+		padding: 0 12px;
 		color: var(--text-secondary);
+		background: var(--control-bg);
 		width: 100%;
 
 		&-icon {
-			width: rem(16);
+			width: 16px;
 		}
 
 		&:hover {
-			background: var(--c7);
+			background: var(--control-bg-hover);
 		}
 		&:focus {
-			background: var(--c8);
+			background: var(--control-bg-hover);
 			color: var(--text-primary);
 		}
 	}
 	.dropdown {
 		position: absolute;
-		top: calc(100% + #{rem(8)});
-		background: var(--c0);
-		border-radius: rem(4);
-		border: rem(1) solid var(--border);
+		top: calc(100% + 8px);
+		background: var(--bg-content-alt);
+		border-radius: 4px;
+		border: 1px solid var(--border);
 		width: 100%;
-		padding: rem(8);
+		padding: 8px;
 		z-index: 1;
+		box-shadow: var(--elevation-close);
 		&-divider {
-			margin: rem(8) 0;
+			margin: 8px 0;
 			border: none;
-			height: rem(1);
-			background: var(--c4);
+			height: 1px;
+			background: var(--border);
 		}
 	}
 	.option {
@@ -143,25 +154,25 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		padding: rem(8);
+		padding: 8px 12px;
 		text-align: left;
-		border-radius: rem(4);
-		font-size: rem(14);
+		border-radius: 4px;
+		font-size: 14px;
 		font-weight: 500;
 
 		&-check {
-			height: rem(18);
-			width: rem(18);
+			height: 18px;
+			width: 18px;
 		}
 
 		&:not(:last-child) {
-			margin-bottom: rem(4);
+			margin-bottom: 4px;
 		}
 		&:hover {
-			background: var(--c2);
+			background: var(--interactive-hover);
 		}
 		&:focus {
-			background: var(--c4);
+			background: var(--interactive-active);
 		}
 		&.active {
 			background: hsl(var(--accent));

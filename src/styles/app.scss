@@ -1,0 +1,45 @@
+@use './root';
+@use './dark';
+@use './light';
+
+@use './utils';
+
+html {
+	overflow: hidden initial;
+}
+
+:focus-visible,
+button:focus-visible,
+[type="button"]:focus-visible {
+	outline: 2px dotted var(--text-primary);
+	outline-width: 2px;
+}
+
+html, body, #svelte {
+  height: 100%;
+}
+#svelte {
+	display: flex;
+  flex-direction: column;
+}
+#page {
+	flex: 1 0 auto;
+	margin-top: 80px;
+}
+.footer {
+	flex-shrink: 0;
+}
+
+body {
+  background: var(--bg-main);
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+	overflow-x: hidden;
+	&.modal-active {
+		overflow: hidden;
+	}
+}
+
+::-webkit-scrollbar-button {
+	display: none !important;
+}

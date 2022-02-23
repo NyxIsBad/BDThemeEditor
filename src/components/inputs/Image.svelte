@@ -1,17 +1,15 @@
 <script lang="ts">
 	import axios from 'axios';
-	import {Upload, Check, Question} from '$components/common/Icon';
+	import {Icon} from '@steeze-ui/svelte-icon';
+	import {Upload, Check, QuestionMarkCircle, Filter} from '@steeze-ui/heroicons';
 	import {createEventDispatcher} from 'svelte';
+	import {disableShare} from '$lib/stores';
 	import tooltip from '$lib/tooltip';
 
 	const dispatch = createEventDispatcher();
 	
 	// Components
-	import {ModalRoot, ModalBody, ModalHeader} from '$components/common/Modal';
-	import {Button} from '$components/common/Button';
-	import {RadioGroup, RadioGroupItem} from '$components/common/RadioGroup';
-	import {Select} from '$components/common/Select';
-	import {Input} from '$components/common/Input';
+	import {Modal, ModalBody, ModalHeader, Button, RadioGroup, RadioGroupItem, Select, Input} from '$components/common';
 
 	// Required vars
 	export let variable: string;
@@ -89,6 +87,13 @@
 				})
 			})
 		}
+	}
+
+	// Disable "Share Preset" if b64 is selected.
+	$: if (uploadType === 'b64') {
+		$disableShare = [...$disableShare, variable];
+	} else {
+		$disableShare = $disableShare.filter(el => el !== variable);
 	}
 
 	/**
@@ -177,26 +182,26 @@
 				<small class="error">{error}</small>
 			{/if}
 		{:else if selectedOption === 'file'}
-			<Button type="primary" on:click={() => fileUploadModal = true}>
+			<Button style="primary" on:click={() => fileUploadModal = true}>
 				Browse
 			</Button>
 		{/if}
 	</div>
 	
-	<ModalRoot bind:visible={fileUploadModal} maxWidth={550}>
-		<ModalHeader title="How should we upload?" on:close={() => fileUploadModal = false} />
+	<Modal bind:visible={fileUploadModal} maxWidth={550}>
+		<ModalHeader>How should we upload?</ModalHeader>
 		<ModalBody markdown={false}>
 			<RadioGroup>
 				<RadioGroupItem bind:group={uploadType} checked={uploadType === 'imgur'} value="imgur">
 					Imgur.com
 					<div class="explain" use:tooltip={{content: `Uploading to Imgur will decrease the amount of lag but means your image is public.`}}>
-						<Question />
+						<Icon src={QuestionMarkCircle} size="16" />
 					</div>
 				</RadioGroupItem>
 				<RadioGroupItem bind:group={uploadType} checked={uploadType === 'b64'} value="b64">
 					Inline encode (base64)
-					<div class="explain" use:tooltip={{content: `Encoding with base64 will increase the amount of lag but means your image is private.`}}>
-						<Question />
+					<div class="explain" use:tooltip={{content: `Encoding with base64 will increase the amount of lag but means your image is private. It also means you won't be able to post your preset.`}}>
+						<Icon src={QuestionMarkCircle} size="16" />
 					</div>
 				</RadioGroupItem>
 			</RadioGroup>
@@ -223,14 +228,12 @@
 			{#if !error && thumbnail}
 				<div class="uploadArea">
 					{#if !fileUploading}
-						<Button type="primary" size="extralarge" long on:click={localFile}>
-							<svelte:fragment slot="iconL">
-								{#if uploadType === 'b64'}
-									<Check />
-								{:else}
-									<Upload />
-								{/if}
-							</svelte:fragment>
+						<Button style="primary" size="large" long on:click={localFile}>
+							{#if uploadType === 'b64'}
+								<Icon src={Check} size="18" />
+							{:else}
+								<Icon src={Upload} size="18" />
+							{/if}
 							{uploadType === 'b64' ? 'Apply' : 'Upload'}
 						</Button>
 					{:else}
@@ -247,37 +250,37 @@
 				</div>
 				{/if}
 		</ModalBody>
-	</ModalRoot>
+	</Modal>
 </template>
 
 <style lang="scss">
 	.option {
 		&-header {
-			margin-bottom: rem(8);
+			margin-bottom: 8px;
 		}
 		&-body {
 			display: flex;
 			flex-direction: column;
-			gap: rem(8);
+			gap: 8px;
 		}
 	}
 
 	.dropzone {
 		$self: &;
 
-		padding: rem(32);
+		padding: 32px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
-		border: rem(2) dashed var(--border);
-		margin-top: rem(16);
+		border: 2px dashed var(--control-border);
+		margin-top: 16px;
 		cursor: pointer;
-		border-radius: rem(4);
+		border-radius: 4px;
 		transition: .15s ease border-color;
 
 		&-promt {
-			font-size: rem(14);
+			font-size: 14px;
 			transition: .15s ease color;
 			color: var(--text-tertiary);
 			user-select: none;
@@ -285,7 +288,7 @@
 		}
 		&-preview {
 			overflow: hidden;
-			border-radius: rem(4);
+			border-radius: 4px;
 		}
 		&-thumb {
 			background-size: cover;
@@ -296,15 +299,15 @@
 			bottom: 0;
 			left: 0;
 			width: 100%;
-			padding: rem(8);
-			font-size: rem(14);
+			padding: 8px;
+			font-size: 14px;
 			background: hsl(0 0% 0% / .8);
 			color: #fff;
 			text-shadow: 0 2px 4px hsl(0 0% 0%);
 		}
 
 		&:hover, &.dragover {
-			border-color: var(--border-hover);
+			border-color: var(--control-border-hover);
 			#{$self}-promt {
 				color: var(--text-secondary);
 			}
@@ -321,28 +324,28 @@
 		}
 	}
 	.explain {
-		width: rem(16);
-		height: rem(16);
-		margin-left: rem(8);
+		width: 16px;
+		height: 16px;
+		margin-left: 8px;
 	}
 	.uploadArea {
-		margin-top: rem(16);
+		margin-top: 16px;
 	}
 	.progress {
 		position: relative;
-		margin-top: rem(32);
+		margin-top: 32px;
 		&-text {
 			position: absolute;
-			top: calc(-100% - #{rem(8)});
+			top: calc(-100% - #{8px});
 			width: 100%;
 			display: flex;
 			justify-content: space-between;
-			font-size: rem(12);
+			font-size: 12px;
 			color: var(--text-tertiary);
 		}
 		&-bar {
-			height: rem(10);
-			border-radius: rem(50);
+			height: 10px;
+			border-radius: 50px;
 			background: var(--c5);
 			overflow: hidden;
 			&-inner {

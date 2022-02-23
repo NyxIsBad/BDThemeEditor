@@ -53,7 +53,6 @@ export interface ITheme {
 	name: string,
 	previewUrl: string,
 	thumbnail: string,
-	developer: IDev,
 	meta: Meta,
 	imports: string[],
 	fonts: string[],

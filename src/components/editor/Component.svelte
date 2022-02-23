@@ -1,7 +1,7 @@
 <script lang="ts">
-	import {THEME, preview} from '$lib/stores';
+	import {THEME} from '$lib/stores';
 	import {varOutput} from '$lib/helpers';
-
+	import {previewAction} from '$lib/preview';
 	import {Colour, Font, Image, Slider, Select, Number} from '../inputs';
 
 	interface Details {
@@ -28,7 +28,11 @@
 	const update = ({detail}: {detail: Details}): void => {
 		let {variable, value, addon} = detail;
 
-		$preview.style.setProperty(`--${variable}`, varOutput(detail).value);
+		previewAction({
+			action: 'setProperty',
+			variable,
+			value: varOutput(detail).value
+		})
 
 		if (addon) {
 			$THEME.addons.forEach(group => {

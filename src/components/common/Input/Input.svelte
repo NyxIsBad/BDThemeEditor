@@ -1,19 +1,14 @@
 <script lang="ts">
-	export let value: string|number = '';
-
+	export let value: string | number = '';
 	/**
 	 * Input type.  
 	 * Default = `text`
 	 */
 	export let inputType: 'text'|'number' = 'text';
-
 	export let placeholder: string = null;
-
 	export let error: any = null;
-
 	/** Minimum number when the `inputType` is set to `number` */
 	export let min: number = 0;
-
 	/** Maximum number when the `inputType` is set to `number` */
 	export let max: number | undefined = undefined;
 	
@@ -51,18 +46,19 @@
 
 <style lang="scss">
 	.input {
-		height: rem(38);
-		border-radius: rem(4);
-		font-size: rem(14);
-		border: rem(1) solid var(--border);
-		padding: 0 rem(12);
+		height: 38px;
+		border-radius: 4px;
+		font-size: 14px;
+		border: 2px solid var(--control-border);
+		padding: 0 12px;
 		background: transparent;
 		width: 100%;
 		transition: .15s ease border-color,
 								.15s ease color,
 								.15s ease box-shadow;
+		outline: none;
 		&:hover {
-			border-color: var(--border-hover);
+			border-color: var(--control-border-hover);
 		}
 		&:focus {
 			border-color: hsl(var(--accent));

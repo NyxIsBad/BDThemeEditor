@@ -1,170 +1,118 @@
 <script lang="ts">
-	import {createEventDispatcher} from 'svelte';
-	import {classes} from '$lib/helpers';
+	export let href: string | null = null;
+	export let style: 'primary' | 'secondary';
+	export let size: 'small' | 'medium' | 'large' = 'medium';
 
-	const dispatch = createEventDispatcher();
-
-	/** Style of the button. */
-	export let type: 'primary' | 'secondary' | 'text' | 'danger';
-
-	/**
-	 * Size of the button.  
-	 * Default = 'medium'
-	 */
-	export let size: 'medium'|'large'|'extralarge' = 'medium';
-
-	/**
-	 * Makes the button fill the available horizontal space.  
-	 * Default = `false`
-	 */
+	export let newTab: boolean = false;
+	export let type: 'submit' | 'button' = 'button';
+	export let external: boolean = false;
 	export let long: boolean = false;
-
-	/**
-	 * Disable the button. Turning it opaque and disabling the click event.  
-	 * Click event will not fire even if styling is removed.
-	 */
-	export let disabled: any = null;
-
-	/**
-	 * Location to navigate to.  
-	 * An anchor tag will be used instead of a button.
-	 */
-	export let href: string = null;
-
-	/** Open the location in a new tab. */
-  export let newTab: boolean = false;
-
-	const eventHandler = (e: MouseEvent) => {
-		if (!disabled) dispatch(e.type);
-	}
 </script>
 
 <template>
 	{#if href}
 		<a
-			{href} 
-			target={newTab ? '_blank' : null}
-			class={classes('btn', type, size)}
+			{href}
+			class="btn {style} {size}"
+			target={newTab ? '_blank' : undefined}
+			rel={(newTab ? 'noreferrer' : undefined) || (external ? 'external' : undefined)}
 			class:long
 		>
-			{#if $$slots.iconL}
-				<div class="iconL">
-					<slot name="iconL" />
-				</div>
-			{/if}
-			{#if $$slots.default}
-				<span><slot /></span>
-			{/if}
+			<div class="content">
+				<slot />
+			</div>
 		</a>
 	{:else}
 		<button
-			type="button"
-			class={classes('btn', type, size)}
+			{type}
+			class="btn {style} {size}"
 			class:long
-			{disabled}
-			on:click={eventHandler}
+			on:click
 		>
-			{#if $$slots.iconL}
-				<div class="iconL">
-					<slot name="iconL" />
-				</div>
-			{/if}
-			{#if $$slots.default}
-				<span><slot /></span>
-			{/if}
+			<div class="content">
+				<slot />
+			</div>
 		</button>
 	{/if}
 </template>
 
 <style lang="scss">
 	.btn {
-		font-weight: 500;
-		border-radius: rem(4);
-		display: flex;
+		display: inline-flex;
 		align-items: center;
-		justify-content: center;
-		transition: .15s ease background, .15s ease box-shadow, .15s ease color;
+		font-weight: 500;
 		user-select: none;
-		line-height: normal;
-
-		.iconL + span {
-			margin-left: rem(8);
-		}
-
-		span {
-			width: min-content;
-			white-space: nowrap;
-		}
-
-		&.long {
+		outline: 2px solid transparent;
+		outline-offset: 0;
+		
+		.content {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: var(--gap);
 			width: 100%;
 		}
-		
-		&.medium {
-			font-size: rem(14);
-			height: rem(38);
-			padding: 0 rem(12);
-		}
-		&.large {
-			font-size: rem(16);
-			height: rem(42);
-			padding: 0 rem(18);
-		}
-		&.extralarge {
-			font-size: rem(18);
-			height: rem(52);
-			padding: 0 rem(32);
+
+		&:focus {
+			outline-color: hsl(var(--accent));
+			outline-offset: 3px;
 		}
 
+		// Styles
 		&.primary {
 			background: hsl(var(--accent));
 			color: #000;
-			text-shadow: 0 rem(2) rem(5) hsl(0 0% 0% / .4);
-			&:hover {
-				background: hsl(var(--accent-dark));
+			transition: box-shadow .15s ease, outline-offset .15s ease, outline-color .15s ease;
+			
+			.content {
+				filter: drop-shadow(0 1px 4px hsl(0 0% 0% / .4));
 			}
-			&:active {
-				background: hsl(var(--accent));
+
+			&:hover {
+				box-shadow: inset 0 0 0 100vmax hsl(0 0% 0% / .14);
 			}
 			&:focus {
-				outline: rem(2) solid hsl(var(--accent) / .6);
-				outline-offset: rem(3);
+				box-shadow: inset 0 0 0 100vmax hsl(0 0% 0% / .14);
 			}
 		}
-
 		&.secondary {
-			background: var(--c4);
+			border: 2px solid var(--control-border);
 			color: var(--text-secondary);
+			transition: color .15s ease, border-color .15s ease, outline-offset .15s ease, outline-color .15s ease;
 			&:hover {
-				background: var(--c5);
-			}
-			&:focus {
-				background: var(--c7);
-				color: var(--text-primary);
-			}
-		}
-
-		&.text {
-			color: var(--text-secondary);
-			&:hover {
+				border-color: var(--control-border-hover);
 				color: var(--text-primary);
 			}
 			&:focus {
-				background: var(--c5);
+				color: var(--text-primary);
+				border-color: var(--control-border-hover);
 			}
 		}
 
-		&[disabled] {
-			pointer-events: none;
-			opacity: .7;
-			filter: grayscale(.4);
+		// Sizes
+		&.small {
+			padding: 6px 12px;
+			border-radius: 3px;
+			font-size: 12px;
+			--gap: 6px;
+		}
+		&.medium {
+			padding: 10px 14px;
+			border-radius: 4px;
+			font-size: 14px;
+			--gap: 8px;
+		}
+		&.large {
+			padding: 16px 32px;
+			border-radius: 6px;
+			font-size: 18px;
+			--gap: 14px;
+		}
+
+		// States
+		&.long {
+			display: flex;
+			width: 100%;
 		}
 	}
-
-	.iconL {
-		display: inline-flex;
-		width: rem(20);
-		height: rem(20);
-	}
-
 </style>

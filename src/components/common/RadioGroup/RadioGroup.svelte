@@ -17,10 +17,10 @@
 
 <style lang="scss">
 	.radio-header {
-		margin-bottom: em(6);
+		margin-bottom: 6px;
 		user-select: none;
 	}
 	.title {
-		font-size: em(15);
+		font-size: 15px;
 	}
 </style>

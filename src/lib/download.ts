@@ -3,28 +3,28 @@ import {varOutput} from './helpers';
 
 import type {IStoreTheme} from '$types/theme';
 
-export default (themeObject: IStoreTheme): void => {
+export const downloadTheme = (THEME: IStoreTheme): void => {
 	let save: string;
 
 	// Meta
-	save = `/**\n${Object.entries(themeObject.meta).map(([key, value]) => ` * @${key} ${value}\n`).join('')}*/\n\n`;
+	save = `/**\n${Object.entries(THEME.meta).map(([key, value]) => ` * @${key} ${value}\n`).join('')}*/\n\n`;
 
 	// Fonts
-	save += themeObject.fonts ? themeObject.fonts.map(url => `@import url('${url}');\n`).join('') : '';
+	save += THEME.fonts ? THEME.fonts.map(url => `@import url('${url}');\n`).join('') : '';
 
 	// Imports
-	save += themeObject.imports.map(url => `@import url('${url}');\n`).join('');
-	let addonImports = themeObject.addons.filter(obj => obj.use);
+	save += THEME.imports.map(url => `@import url('${url}');\n`).join('');
+	let addonImports = THEME.addons.filter(obj => obj.use);
 	addonImports.forEach(obj => obj.imports.forEach(url => save += `@import url('${url}');\n`));
 
 	// Variables
 	let groups: {[k: string]: any[]} = {}
-	themeObject.varGroups.forEach(group => {
+	THEME.varGroups.forEach(group => {
 		groups[group] = []
 	});
 
 	Object.keys(groups).forEach(group => {
-		themeObject.variables.forEach(vars => {
+		THEME.variables.forEach(vars => {
 			vars.inputs.forEach(input => {
 				if (input.varGroup === group || (group === ':root' && !input.varGroup)) groups[group] = [...groups[group], input.details];
 			})
@@ -32,13 +32,13 @@ export default (themeObject: IStoreTheme): void => {
 	});
 
 	// Add addon and hidden variables to the :root
-	if (themeObject.hiddenVars) {
-		themeObject.hiddenVars.forEach(hiddenVar => {
+	if (THEME.hiddenVars) {
+		THEME.hiddenVars.forEach(hiddenVar => {
 			const group = hiddenVar.varGroup || ':root';
 			groups[group] = [...groups[group], hiddenVar];
 		})
 	}
-	themeObject.addons.forEach(addon => {
+	THEME.addons.forEach(addon => {
 		if (addon.variables) {
 			addon.variables.forEach(input => {
 				if (addon.use) groups[':root'] = [...groups[':root'], input.details];
@@ -55,7 +55,7 @@ export default (themeObject: IStoreTheme): void => {
 	save += '\n/* Any custom CSS below here */\n\n\n';
 
 	const file = new Blob([save], {type: 'text/plain;charset=utf-8'});
-	FileSaver.saveAs(file, `${themeObject.meta.name}.theme.css`);
+	FileSaver.saveAs(file, `${THEME.meta.name}.theme.css`);
 }
 
 // Helpers
