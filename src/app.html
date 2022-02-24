@@ -11,13 +11,6 @@
 		<link rel="stylesheet" href="/css/normalize.css">
 		<link rel="stylesheet" href="/css/nprogress.css">
 		<link rel="import" href="https://gibbu.github.io/ThemePreview/">
-		<script>
-			// check for theme preference before page loads
-			if (!('theme' in localStorage)) {
-				localStorage.theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-			}
-			document.documentElement.setAttribute('class', `theme-${localStorage.theme}`);
-		</script>
 		%svelte.head%
 	</head>
 	<body>

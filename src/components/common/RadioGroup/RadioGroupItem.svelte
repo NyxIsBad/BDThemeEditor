@@ -58,7 +58,7 @@
 		}
 		&.selected {
 			background: hsl(var(--accent) / .1);
-			color: hsl(var(--accent-text));
+			color: hsl(var(--accent));
 			border-color: hsl(var(--accent));
 			z-index: 1;
 			.box {

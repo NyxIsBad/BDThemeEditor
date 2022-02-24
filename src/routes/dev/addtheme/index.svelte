@@ -15,11 +15,12 @@
 </script>
 
 <script lang="ts">
-	import {ThemeForm} from '$components/page';
+	import {ThemeForm, Header} from '$components/page';
 </script>
 
 <template>
 	<div class="wrap">
+		<Header title="Add theme" />
 		<ThemeForm />
 	</div>
 </template>

@@ -66,8 +66,8 @@
 		gap: 4px;
 	}
 	.avatar {
-		width: 36px;
-		height: 36px;
+		width: 32px;
+		height: 32px;
 		border-radius: 50%;
 		background: var(--bg-content);
 	}

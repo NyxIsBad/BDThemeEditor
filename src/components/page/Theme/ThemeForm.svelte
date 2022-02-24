@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {Icon} from '@steeze-ui/svelte-icon';
-	import {PlusCircle, XCircle} from '@steeze-ui/heroicons';
+	import {PlusCircle, XCircle, InformationCircle, Moon, Home, Sun, User, Photograph, ViewList, StatusOnline, Adjustments, Cog, AtSymbol, ColorSwatch, GlobeAlt, Chat, Collection} from '@steeze-ui/heroicons';
 	import {Input, Select} from '$components/common';
 	import {templates} from './templates';
 	import tooltip from '$lib/tooltip';
@@ -29,7 +29,12 @@
 			inputs: [templates.inputs.text],
 			userModal: false
 		}],
-		hiddenVars: [],
+		hiddenVars: [{
+			variable: '',
+			value: '',
+			varGroup: '',
+			comment: ''
+		}],
 		varGroups: [],
 		addons: []
 	}
@@ -57,7 +62,6 @@
 
 	interface AddTemplate {
 		action: 'template',
-		template: string,
 		prop: string
 	}
 	interface AddGroup {
@@ -70,8 +74,8 @@
 	}
 	const addRow = (options: (AddTemplate|AddGroup|AddInput)): void => {
 		if (options.action === 'template') {
-			const {template, prop} = options;
-			data[prop] = [...data[prop], templates[template]];
+			const {prop} = options;
+			data[prop] = [...data[prop], {...templates[prop]}];
 			
 		} else if (options.action === 'group') {
 			data.variables = [...data.variables, {...templates.variables}]
@@ -126,6 +130,18 @@
 				{#each data.imports as url, i}
 					<div class="input">
 						<Input bind:value={url} />
+						<div class="btns">
+							{#if i !== 0}
+								<button type="button" class="remove" on:click={() => removeRow({action: 'template', prop: 'imports', index: i})}>
+									<Icon src={XCircle} size="24" />
+								</button>
+							{/if}
+							{#if data.imports.length - 1 === i}
+								<button type="button" class="add" on:click={() => addRow({action: 'template', prop: 'imports'})}>
+									<Icon src={PlusCircle} size="24" />
+								</button>
+							{/if}
+						</div>
 					</div>
 				{/each}
 			</div>
@@ -142,7 +158,7 @@
 								</button>
 							{/if}
 							{#if data.fonts.length - 1 === i}
-								<button type="button" class="add" on:click={() => addRow({action: 'template', prop: 'fonts', template: 'fonts'})}>
+								<button type="button" class="add" on:click={() => addRow({action: 'template', prop: 'fonts'})}>
 									<Icon src={PlusCircle} size="24" />
 								</button>
 							{/if}
@@ -189,28 +205,32 @@
 							<Select
 								long
 								options={[
-									{label: 'App', value: 'App'},
-									{label: 'Border', value: 'Border'},
-									{label: 'Chat', value: 'Chat'},
-									{label: 'Collections', value: 'Collections'},
-									{label: 'Colour', value: 'Colour'},
-									{label: 'Font', value: 'Font'},
-									{label: 'Gear', value: 'Gear'},
-									{label: 'Home', value: 'Home'},
-									{label: 'Image', value: 'Image'},
-									{label: 'List', value: 'List'},
-									{label: 'Moon', value: 'Moon'},
-									{label: 'Person', value: 'Person'},
-									{label: 'Status', value: 'Status'},
-									{label: 'Sizing', value: 'Sizing'},
-									{label: 'Sun', value: 'Sun'},
+									{label: 'Globle', value: 'Globle', icon: GlobeAlt},
+									{label: 'Chat', value: 'Chat', icon: Chat},
+									{label: 'Collection', value: 'Collection', icon: Collection},
+									{label: 'Colour Swatch', value: 'ColorSwatch', icon: ColorSwatch},
+									{label: 'At Symbol', value: 'AtSymbol', icon: AtSymbol},
+									{label: 'Cog', value: 'Cog', icon: Cog},
+									{label: 'Home', value: 'Home', icon: Home},
+									{label: 'Photograph', value: 'Photograph', icon: Photograph},
+									{label: 'List', value: 'ViewList', icon: ViewList},
+									{label: 'Moon', value: 'Moon', icon: Moon},
+									{label: 'User', value: 'User', icon: User},
+									{label: 'Status', value: 'StatusOnline', icon: StatusOnline},
+									{label: 'Sizing', value: 'Adjustments', icon: Adjustments},
+									{label: 'Sun', value: 'Sun', icon: Sun},
 								]}
-								value="Gear"
+								value="Cog"
 								on:update={({detail}) => group.icon = detail}
 							/>
 						</div>
 						<div class="input">
-							<p class="name">Display user modal</p>
+							<p class="name">
+								Display user modal
+								<span use:tooltip={{content: 'Clicking on the setting will open the User Modal in the previewer.'}}>
+									<Icon src={InformationCircle} size="22" />
+								</span>
+							</p>
 							<Select
 								long
 								options={[
@@ -265,20 +285,109 @@
 										/>
 									</div>
 									<div class="input">
-										<p class="name">Var Group</p>
+										<p class="name">
+											Var Group
+											<span use:tooltip={{content: 'Var Group is where the variable should be placed in the downloaded file. Leaving this blank will default to :root.'}}>
+												<Icon src={InformationCircle} size="22" />
+											</span>
+										</p>
 										<Input bind:value={input.varGroup} />
 									</div>
 									<p class="name">Details</p>
 									<div class="indent">
 										{#each Object.entries(input.details) as [key, value]}
 											<div class="input">
-												<p class="name">{key}</p>
-												<Input bind:value={input.details[key]} />
+												<p class="name">
+													{key}
+													{#if key === 'comment'}
+														<span use:tooltip={{content: 'Comment to be placed next to the variable in the downloaded file.'}}>
+															<Icon src={InformationCircle} size="22" />
+														</span>
+													{/if}
+												</p>
+												{#if typeof value === 'boolean'}
+													<Select
+														long
+														options={[
+															{label: 'True', value: true},
+															{label: 'False', value: false}
+														]}
+														value={value}
+														on:update={({detail}) => input.details[key] = detail}
+													/>
+												{:else if key === 'type' && input.type === 'colour'}
+													<Select
+														long
+														options={[
+															{label: 'HEX', value: 'HEX'},
+															{label: 'RGB', value: 'RGB'},
+															{label: 'HSL', value: 'HSL'}
+														]}
+														value={value}
+														on:update={({detail}) => input.details[key] = detail}
+													/>	
+												{:else}
+													<Input bind:value={input.details[key]} />
+												{/if}
 											</div>
 										{/each}
 									</div>
 								</div>
 							{/each}
+						</div>
+					</div>
+				{/each}
+			</div>
+			
+			<p class="name">
+				Hidden Variables
+				<span use:tooltip={{content: 'Hidden variables are variables that should not be edited by the user but need to incuded in the downloaded file. Example: version variable.'}}>
+					<Icon src={InformationCircle} size="22" />
+				</span>
+			</p>
+			<div class="indent">
+				{#each data.hiddenVars as hidden, hiddenIndex}
+					<header>
+						<p class="name">{hiddenIndex}</p>
+						<div class="btns">
+							{#if hiddenIndex !== 0}
+								<button
+									type="button"
+									class="remove"
+									use:tooltip={{content: 'Remove input'}}
+									on:click={() => removeRow({action: 'template', prop: 'hiddenVars', index: hiddenIndex})}
+								>
+									<Icon src={XCircle} size="24" />
+								</button>
+							{/if}
+							{#if data.hiddenVars.length - 1 === hiddenIndex}
+								<button
+									type="button"
+									class="add"
+									use:tooltip={{content: 'Add new input'}}
+									on:click={() => addRow({action: 'template', prop: 'hiddenVars'})}
+								>
+									<Icon src={PlusCircle} size="24" />
+								</button>
+							{/if}
+						</div>
+					</header>
+					<div class="indent">
+						<div class="input">
+							<p class="name">Variable</p>
+							<Input bind:value={hidden.variable} />
+						</div>
+						<div class="input">
+							<p class="name">Value</p>
+							<Input bind:value={hidden.value} />
+						</div>
+						<div class="input">
+							<p class="name">Var Group</p>
+							<Input bind:value={hidden.varGroup} />
+						</div>
+						<div class="input">
+							<p class="name">Comment</p>
+							<Input bind:value={hidden.comment} />
 						</div>
 					</div>
 				{/each}
@@ -292,6 +401,25 @@
 <style lang="scss">
 	.indent {
 		padding-left: 45px;
+		position: relative;
+		&::before {
+			content: "";
+			position: absolute;
+			left: 22px;
+			height: 100%;
+			width: 2px;
+			background: var(--spine);
+		}
+		&:hover {
+			&::before {
+				background: var(--spine-hover);
+			}
+			& > .input .name,
+			& > .name {
+				color: var(--text-primary);
+				font-style: italic;
+			}
+		}
 	}
 	.input {
 		display: flex;
@@ -303,13 +431,17 @@
 	header {
 		display: flex;
 		align-items: center;
-		// justify-content: space-between;
 	}
 	.name {
 		white-space: nowrap;
 		height: 38px;
 		display: flex;
 		align-items: center;
+		span {
+			display: flex;
+			margin-left: 4px;
+			color: var(--text-tertiary);
+		}
 		&::after {
 			content: "=";
 			margin: 0 12px;

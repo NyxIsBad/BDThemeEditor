@@ -4,6 +4,32 @@
 	--yellow: 38 92% 50%;
 	--green: 160 84% 39%;
 
+	--bg-main: hsl(0 0% 10%);
+	--bg-alt: hsl(0 0% 11.5%);
+	--bg-content: hsl(0 0% 13%);
+	--bg-content-alt: hsl(0 0% 15%);
+
+	--border: hsl(0 0% 8%);
+	--border-mid: hsl(0 0% 15%);
+	--border-high: hsl(0 0% 22%);
+
+	--control-bg: hsl(0 0% 18%);
+	--control-bg-hover: hsl(0 0% 20%);
+	--control-border: hsl(0 0% 100% / .1);
+	--control-border-hover: hsl(0 0% 100% / .2);
+
+	--spine: hsl(0 0% 18%);
+	--spine-hover: hsl(0 0% 30%);
+
+	--interactive-hover: hsl(0 0% 17%);
+	--interactive-active: hsl(0 0% 18%);
+
+	--elevation-close: 0 4px 15px hsl(0 0% 0% / .15);
+
+	--text-primary: hsl(0 0% 100%);
+	--text-secondary: hsl(0 0% 80%);
+	--text-tertiary: hsl(0 0% 50%);
+
 	--font-body: 'Inter', 'Roboto', 'Arial', sans-serif;
 	--font-display: 'Montserrat';
 }

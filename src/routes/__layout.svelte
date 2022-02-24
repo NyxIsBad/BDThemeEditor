@@ -3,6 +3,7 @@
 	import NProgress from 'nprogress';
 
 	import Nav from '$components/layout/Nav.svelte';
+	import Footer from '$components/layout/Footer.svelte';
 
 	$: if ($navigating) {
 		NProgress.start()
@@ -17,6 +18,8 @@
 	<div id="page">
 		<slot />
 	</div>
+
+	<Footer />
 </template>
 
 <style lang="scss" global>

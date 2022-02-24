@@ -28,7 +28,7 @@
 			display: block;
 			margin: 8px 0 0;
 			height: 1px;
-			background: var(--border-alt);
+			background: var(--border-high);
 		}
 	}
 	.title {

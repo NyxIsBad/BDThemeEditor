@@ -5,7 +5,7 @@ const inputs = {
 		details: {
 			variable: '',
 			title: '',
-			type: '',
+			type: 'RGB',
 			alpha: false,
 			rule: false,
 			hint: '',
@@ -104,5 +104,11 @@ export const templates = {
 		inputs: [inputs.text],
 		userModal: false,
 	},
-	inputs
+	inputs,
+	hiddenVars: {
+		variable: '',
+		value: '',
+		varGroup: '',
+		comment: ''
+	}
 }

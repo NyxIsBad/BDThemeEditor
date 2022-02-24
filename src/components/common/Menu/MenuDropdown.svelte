@@ -49,7 +49,7 @@
 		width: 280px;
 		position: absolute;
 		background: var(--bg-content);
-		border: 1px solid var(--border);
+		border: 1px solid var(--border-high);
 		border-radius: 4px;
 		padding: 0 8px;
 		top: calc(100% + 16px);
@@ -76,7 +76,7 @@
 		height: 10px;
 		transform: rotate(45deg);
 		background: var(--bg-content);
-		border-top: 1px solid var(--border);
-		border-left: 1px solid var(--border);
+		border-top: 1px solid var(--border-high);
+		border-left: 1px solid var(--border-high);
 	}
 </style>

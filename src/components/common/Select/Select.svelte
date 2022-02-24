@@ -11,7 +11,8 @@
 	// Types
 	interface Option {
 		label: string,
-		value: string | boolean | number
+		value: string | boolean | number,
+		icon?: any
 	}
 
 	export let options: Option[]
@@ -65,7 +66,12 @@
 				}}>
 				{#each options as option}
 					<button class="option" class:active={selected.value === option.value} on:click={() => setOption(option)}>
-						<span class="option-label">{option.label}</span>
+						<span class="option-label">
+							{#if option.icon}
+								<Icon src={option.icon} size="20" />
+							{/if}
+							{option.label}
+						</span>
 						{#if selected.value === option.value}
 							<div class="option-check">
 								<Icon src={Check} size="18" />
@@ -159,6 +165,12 @@
 		border-radius: 4px;
 		font-size: 14px;
 		font-weight: 500;
+
+		&-label {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
 
 		&-check {
 			height: 18px;

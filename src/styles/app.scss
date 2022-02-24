@@ -1,6 +1,4 @@
 @use './root';
-@use './dark';
-@use './light';
 
 @use './utils';
 
@@ -24,7 +22,7 @@ html, body, #svelte {
 }
 #page {
 	flex: 1 0 auto;
-	margin-top: 80px;
+	margin-top: 64px;
 }
 .footer {
 	flex-shrink: 0;
