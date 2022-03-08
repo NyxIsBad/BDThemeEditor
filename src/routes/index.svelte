@@ -29,7 +29,6 @@
 				</h3>
 				<div class="step-body">
 					<p class="step-text">We have a wide range of themes to start editing provided by the community.</p>
-					<p class="step-text">Select one and start editing!</p>
 					<a href="/themes" class="step-anchor">
 						Chose a theme
 						<Icon src={ArrowRight} size="16" />
@@ -44,7 +43,7 @@
 					Edit to your liking
 				</h3>
 				<div class="step-body">
-					<p class="step-text">No need to learn and mess around with CSS. Get straight to making your theme!</p>
+					<p class="step-text">No need to learn or mess around with CSS. Straight to getting the theme of your dreams.</p>
 				</div>
 			</div>
 			<div class="step">
@@ -52,10 +51,10 @@
 					<div class="step-icon">
 						<Icon src={Share} size="20" />
 					</div>
-					Share your theme
+					Share it
 				</h3>
 				<div class="step-body">
-					<p class="step-text">Once you're done editing your theme, share it with everyone else. Which can edit, download, and share their awesome edits!</p>
+					<p class="step-text">Once you're done editing your theme, share it with everyone else!</p>
 					<a href="/presets" class="step-anchor">
 						Browse presets
 						<Icon src={ArrowRight} size="16" />
@@ -117,9 +116,6 @@
 		}
 		&-text {
 			line-height: 1.5;
-			&:not(:last-child) {
-				margin-bottom: 6px;
-			}
 		}
 		&-anchor {
 			font-size: 14px;

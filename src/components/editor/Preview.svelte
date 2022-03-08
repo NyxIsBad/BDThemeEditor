@@ -1,4 +1,5 @@
 <script lang="ts">
+	import {dev} from '$app/env';
 	import {onDestroy} from 'svelte';
 	import {loaded, preview} from '$lib/stores';
 
@@ -21,8 +22,6 @@
 			src="https://gibbu.github.io/ThemePreview?file={url}"
 			frameborder="0"
 			title=""
-			height="500"
-			width="1500"
 		/>
 	</div>
 </template>

@@ -5,6 +5,7 @@ const inputs = {
 		details: {
 			variable: '',
 			title: '',
+			value: '',
 			type: 'RGB',
 			alpha: false,
 			rule: false,
@@ -81,17 +82,6 @@ const inputs = {
 			unit: '',
 			comment: ''
 		}
-	},
-	text: {
-		type: 'text',
-		varGroup: '',
-		details: {
-			variable: '',
-			title: '',
-			value: '',
-			hint: '',
-			comment: ''
-		}
 	}
 }
 
@@ -101,7 +91,7 @@ export const templates = {
 	variables: {
 		title: '',
 		icon: '',
-		inputs: [inputs.text],
+		inputs: [inputs.image],
 		userModal: false,
 	},
 	inputs,

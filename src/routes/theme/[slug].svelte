@@ -29,9 +29,11 @@
 	import {ArrowLeft, InformationCircle, Check, DesktopComputer, Photograph, Sun, Moon, ColorSwatch, MenuAlt1, Puzzle, Globe, Home, User, Server, Cog, Chat, SwitchVertical} from '@steeze-ui/heroicons';
 	import {THEME, isMounted} from '$lib/stores';
 	import {browser} from '$app/env';
+	import {afterNavigate} from '$app/navigation';
 	import {onMount, onDestroy} from 'svelte';
 	import tooltip from '$lib/tooltip';
 	import {previewAction} from '$lib/preview';
+	import NProgress from 'nprogress';
 
 	// types
 	import type {IAddon} from '$types/addon';
@@ -50,7 +52,6 @@
 	$THEME = {
 		name: theme.name,
 		meta: theme.meta,
-		developer: theme.developer,
 		imports: theme.imports,
 		fonts: theme.fonts,
 		variables: theme.variables,
@@ -59,9 +60,13 @@
 		varGroups: [':root', ...theme.varGroups]
 	}
 
-	console.log($THEME);
-
-	onMount(() => $isMounted = true)
+	onMount(() => {
+		NProgress.done();
+		$isMounted = true;
+		previewAction({
+			action: 'reset'
+		})
+	});
 	onDestroy(() => $isMounted = false);
 
 	// Developer warning

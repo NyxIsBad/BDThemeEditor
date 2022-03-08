@@ -35,3 +35,11 @@
 export const getUrl = (url: string): string => {
 	return between(url, '(', ')').replace(/'/g, '');
 }
+
+/**
+ * Simple function to clone the data given.
+ * @param data The data to be cloned.
+ */
+export const clone = (data: any): any => {
+	return JSON.parse(JSON.stringify(data));
+}

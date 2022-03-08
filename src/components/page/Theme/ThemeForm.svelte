@@ -1,32 +1,43 @@
 <script lang="ts">
 	import {Icon} from '@steeze-ui/svelte-icon';
-	import {PlusCircle, XCircle, InformationCircle, Moon, Home, Sun, User, Photograph, ViewList, StatusOnline, Adjustments, Cog, AtSymbol, ColorSwatch, GlobeAlt, Chat, Collection} from '@steeze-ui/heroicons';
+	import {InformationCircle, Moon, Home, Sun, User, Photograph, ViewList, StatusOnline, Adjustments, Cog, AtSymbol, ColorSwatch, GlobeAlt, Chat, Collection} from '@steeze-ui/heroicons';
 	import {Input, Select} from '$components/common';
 	import {templates} from './templates';
 	import tooltip from '$lib/tooltip';
+	import api from '$lib/api';
+	import {clone} from '$lib/helpers';
+
+	import {Button} from '$components/common';
+	import Btns from './Btns.svelte';
 	
+	export let editing: boolean = false;
 	export let data = {
-		name: '',
-		previewUrl: '',
-		thumbnail: '',
+		name: 'SoftX',
+		previewUrl: 'https://discordstyles.github.io/SoftX/SoftX.theme.css',
+		thumbnail: 'https://camo.githubusercontent.com/6806907a0313ec99a80fe2ead0d275570332a3d8b36287f9b97b6529543877ab/68747470733a2f2f692e696d6775722e636f6d2f4535376746334c2e706e67',
 		meta: {
-			name: '',
-			author: '',
-			version: '',
-			description: '',
-			source: '',
-			invite: '',
+			name: 'SoftX',
+			author: 'Gibbu#1211',
+			version: '1.0.0',
+			description: 'A soft and comfy feel for Discord.',
+			source: 'https://github.com/DiscordStyles/SoftX',
+			invite: 'ZHthyCw',
 			donate: '',
 			patreon: '',
 			website: '',
-			authorId: ''
+			authorId: '174868361040232448'
 		},
-		imports: [''],
+		imports: [
+			'https://discordstyles.github.io/SoftX/SoftX.css',
+			'https://discordstyles.github.io/SoftX/RadialGlow.css',
+			'https://discordstyles.github.io/SoftX/VerticalUserArea.css',
+			'https://discordstyles.github.io/Addons/windows-titlebar.css'
+		],
 		fonts: [''],
 		variables: [{
 			title: '',
 			icon: 'Gear',
-			inputs: [templates.inputs.text],
+			inputs: [{...templates.inputs.image}],
 			userModal: false
 		}],
 		hiddenVars: [{
@@ -49,14 +60,23 @@
 		group: number,
 		index: number
 	}
-	const removeRow = (options: (RemoveTemplate|RemoveInput)): void => {
+	interface RemoveOption {
+		action: 'option',
+		group: number,
+		input: number,
+		option: number
+	}
+	const removeRow = (options: (RemoveTemplate|RemoveInput|RemoveOption)): void => {
 		if (options.action === 'template') {
 			const {prop, index} = options;
 			data[prop] = data[prop].filter((e: any, i: number) => i !== index);
-		}
-		if (options.action === 'input') {
+		} else if (options.action === 'input') {
 			const {group, index} = options;
 			data.variables[group].inputs = data.variables[group].inputs.filter((e: any, i: number) => i !== index);
+		} else if (options.action === 'option') {
+			const {group, input, option} = options;
+			// @ts-ignore
+			data.variables[group].inputs[input].details.options = data.variables[group].inputs[input].details.options.filter((e: any, i: number) => i !== option)
 		}
 	}
 
@@ -72,18 +92,25 @@
 		group: number,
 		input: string
 	}
-	const addRow = (options: (AddTemplate|AddGroup|AddInput)): void => {
+	interface AddOption {
+		action: 'option',
+		group: number,
+		input: number
+	}
+	const addRow = (options: (AddTemplate|AddGroup|AddInput|AddOption)): void => {
 		if (options.action === 'template') {
 			const {prop} = options;
-			data[prop] = [...data[prop], {...templates[prop]}];
-			
+			const newProp = typeof templates[prop] === 'string' ? '' : clone(templates[prop])
+			data[prop] = [...data[prop], newProp];
 		} else if (options.action === 'group') {
-			data.variables = [...data.variables, {...templates.variables}]
-
+			data.variables = [...data.variables, clone(templates.variables)]
 		} else if (options.action === 'input') {
 			const {group, input} = options;
-
-			data.variables[group].inputs = [...data.variables[group].inputs, {...templates.inputs[input]}]
+			data.variables[group].inputs = [...data.variables[group].inputs, clone(templates.inputs[input])]
+		} else if (options.action === 'option') {
+			const {group, input} = options;
+			// @ts-ignore
+			data.variables[group].inputs[input].details.options = [...data.variables[group].inputs[input].details.options, {label: '', value: ''}]
 		}
 	}
 
@@ -92,15 +119,27 @@
 	}
 
 	const submit = async(): Promise<void> => {
-		console.log(data);
+		// console.log(data);
+		if (editing) {
+			
+		} else {
+			const {status, errors} = await api.post('/dev/addtheme.json', {data})
+
+			if (status === 200) {
+				console.log('yes!!!!!!!');
+				return;
+			}
+
+			console.log('no :(');
+
+		}
 	}
 </script>
 
 <template>
 	<form on:submit|preventDefault={submit}>
 
-
-		<div class="container">
+		<main class="container">
 			<div class="input">
 				<p class="name">Name</p>
 				<Input bind:value={data.name} />
@@ -130,18 +169,13 @@
 				{#each data.imports as url, i}
 					<div class="input">
 						<Input bind:value={url} />
-						<div class="btns">
-							{#if i !== 0}
-								<button type="button" class="remove" on:click={() => removeRow({action: 'template', prop: 'imports', index: i})}>
-									<Icon src={XCircle} size="24" />
-								</button>
-							{/if}
-							{#if data.imports.length - 1 === i}
-								<button type="button" class="add" on:click={() => addRow({action: 'template', prop: 'imports'})}>
-									<Icon src={PlusCircle} size="24" />
-								</button>
-							{/if}
-						</div>
+						<Btns
+							index={i}
+							array={data.imports}
+							type="import"
+							on:add={() => addRow({action: 'template', prop: 'imports'})}
+							on:remove={() => removeRow({action: 'template', prop: 'imports', index: i})}
+						/>
 					</div>
 				{/each}
 			</div>
@@ -151,18 +185,13 @@
 				{#each data.fonts as url, i}
 					<div class="input">
 						<Input bind:value={url} />
-						<div class="btns">
-							{#if i !== 0}
-								<button type="button" class="remove" on:click={() => removeRow({action: 'template', prop: 'fonts', index: i})}>
-									<Icon src={XCircle} size="24" />
-								</button>
-							{/if}
-							{#if data.fonts.length - 1 === i}
-								<button type="button" class="add" on:click={() => addRow({action: 'template', prop: 'fonts'})}>
-									<Icon src={PlusCircle} size="24" />
-								</button>
-							{/if}
-						</div>
+						<Btns
+							index={i}
+							array={data.imports}
+							type="import"
+							on:add={() => addRow({action: 'template', prop: 'imports'})}
+							on:remove={() => removeRow({action: 'template', prop: 'imports', index: i})}
+						/>
 					</div>
 				{/each}
 			</div>
@@ -172,28 +201,13 @@
 				{#each data.variables as group, groupIndex}
 					<header>
 						<p class="name">{group.title || groupIndex}</p>
-						<div class="btns">
-							{#if groupIndex !== 0}
-								<button
-									type="button"
-									class="remove"
-									use:tooltip={{content: 'Remove group'}}
-									on:click={() => removeRow({action: 'template', prop: 'variables', index: groupIndex})}
-								>
-									<Icon src={XCircle} size="24" />
-								</button>
-							{/if}
-							{#if data.variables.length - 1 === groupIndex}
-								<button
-									type="button"
-									class="add"
-									use:tooltip={{content: 'Add new group'}}
-									on:click={() => addRow({action: 'group'})}
-								>
-									<Icon src={PlusCircle} size="24" />
-								</button>
-							{/if}
-						</div>
+						<Btns
+							index={groupIndex}
+							array={data.variables}
+							type="group"
+							on:add={() => addRow({action: 'group'})}
+							on:remove={() => removeRow({action: 'template', prop: 'variables', index: groupIndex})}
+						/>
 					</header>
 					<div class="indent">
 						<div class="input">
@@ -247,28 +261,13 @@
 							{#each group.inputs as input, inputIndex}
 								<header>
 									<p class="name">{group.title || groupIndex} - {inputIndex}</p>
-									<div class="btns">
-										{#if inputIndex !== 0}
-											<button
-												type="button"
-												class="remove"
-												use:tooltip={{content: 'Remove input'}}
-												on:click={() => removeRow({action: 'input', group: groupIndex, index: inputIndex})}
-											>
-												<Icon src={XCircle} size="24" />
-											</button>
-										{/if}
-										{#if group.inputs.length - 1 === inputIndex}
-											<button
-												type="button"
-												class="add"
-												use:tooltip={{content: 'Add new input'}}
-												on:click={() => addRow({action: 'input', group: groupIndex, input: 'text'})}
-											>
-												<Icon src={PlusCircle} size="24" />
-											</button>
-										{/if}
-									</div>
+									<Btns
+										index={inputIndex}
+										array={group.inputs}
+										type="input"
+										on:add={() => addRow({action: 'input', group: groupIndex, input: 'image'})}
+										on:remove={() => removeRow({action: 'input', group: groupIndex, index: inputIndex})}
+									/>
 								</header>
 								<div class="indent">
 									<div class="input">
@@ -277,8 +276,11 @@
 											long
 											options={[
 												{label: 'Colour', value: 'colour'},
+												{label: 'Font', value: 'font'},
 												{label: 'Image', value: 'image'},
-												{label: 'Text', value: 'text'}
+												{label: 'Number', value: 'number'},
+												{label: 'Select', value: 'select'},
+												{label: 'Slider', value: 'slider'},
 											]}
 											value={input.type}
 											on:update={({detail}) => changeType(groupIndex, inputIndex, detail)}
@@ -315,6 +317,8 @@
 														value={value}
 														on:update={({detail}) => input.details[key] = detail}
 													/>
+												{:else if typeof value === 'number'}
+													<Input inputType="number" bind:value={input.details[key]} />
 												{:else if key === 'type' && input.type === 'colour'}
 													<Select
 														long
@@ -326,10 +330,34 @@
 														value={value}
 														on:update={({detail}) => input.details[key] = detail}
 													/>	
-												{:else}
+												{:else if key !== 'options'}
 													<Input bind:value={input.details[key]} />
 												{/if}
 											</div>
+											{#if key === 'options'}
+												<div class="indent">
+													{#each value as option, optionIndex}
+														<header>
+															<p class="name">{optionIndex}</p>
+															<Btns
+																index={optionIndex}
+																array={value}
+																type="option"
+																on:add={() => addRow({action: 'option', group: groupIndex, input: inputIndex})}
+																on:remove={() => removeRow({action: 'option', group: groupIndex, input: inputIndex, option: optionIndex})}
+															/>
+														</header>
+														<div class="indent">
+															{#each Object.keys(option) as key}
+																<div class="input">
+																	<p class="name">{key}</p>
+																	<Input bind:value={option[key]} />
+																</div>
+															{/each}
+														</div>
+													{/each}
+												</div>
+											{/if}
 										{/each}
 									</div>
 								</div>
@@ -349,28 +377,13 @@
 				{#each data.hiddenVars as hidden, hiddenIndex}
 					<header>
 						<p class="name">{hiddenIndex}</p>
-						<div class="btns">
-							{#if hiddenIndex !== 0}
-								<button
-									type="button"
-									class="remove"
-									use:tooltip={{content: 'Remove input'}}
-									on:click={() => removeRow({action: 'template', prop: 'hiddenVars', index: hiddenIndex})}
-								>
-									<Icon src={XCircle} size="24" />
-								</button>
-							{/if}
-							{#if data.hiddenVars.length - 1 === hiddenIndex}
-								<button
-									type="button"
-									class="add"
-									use:tooltip={{content: 'Add new input'}}
-									on:click={() => addRow({action: 'template', prop: 'hiddenVars'})}
-								>
-									<Icon src={PlusCircle} size="24" />
-								</button>
-							{/if}
-						</div>
+						<Btns
+							index={hiddenIndex}
+							array={data.hiddenVars}
+							type="hidden variable"
+							on:add={() => addRow({action: 'template', prop: 'hiddenVars'})}
+							on:remove={() => removeRow({action: 'template', prop: 'hiddenVars', index: hiddenIndex})}
+						/>
 					</header>
 					<div class="indent">
 						<div class="input">
@@ -392,9 +405,11 @@
 					</div>
 				{/each}
 			</div>
-
-		</div>
-		<button type="submit">submit</button>
+		</main>
+		
+		<footer class="footer">
+			<Button style="primary" type="submit">Submit</Button>
+		</footer>
 	</form>
 </template>
 
@@ -419,6 +434,9 @@
 				color: var(--text-primary);
 				font-style: italic;
 			}
+		}
+		& + .input {
+			margin-top: 6px;
 		}
 	}
 	.input {
@@ -448,19 +466,7 @@
 		}
 	}
 
-	.btns {
-		display: flex;
-		button {
-			margin-left: 8px;
-		}
-		&:empty {
-			display: none;
-		}
-	}
-	.add {
-		color: hsl(var(--green));
-	}
-	.remove {
-		color: hsl(var(--red));
+	.footer {
+		margin-top: 36px;
 	}
 </style>

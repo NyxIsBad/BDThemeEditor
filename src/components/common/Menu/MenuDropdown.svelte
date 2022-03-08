@@ -46,7 +46,7 @@
 
 <style lang="scss">
 	.dropdown {
-		width: 280px;
+		width: 260px;
 		position: absolute;
 		background: var(--bg-content);
 		border: 1px solid var(--border-high);

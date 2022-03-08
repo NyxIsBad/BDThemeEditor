@@ -4,8 +4,6 @@
 	import {Code} from '@steeze-ui/heroicons';
 
 	import Auth from './Auth.svelte';
-
-	console.log($page.url.pathname);
 </script>
 
 <template>

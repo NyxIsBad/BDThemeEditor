@@ -17,7 +17,7 @@
 
 <template>
 	{#each themes as theme}
-		<a href="/theme/{theme.name.toLowerCase()}">{theme.name} - {theme.developer.name}</a>
+		<a href="/theme/{theme.name.toLowerCase()}">{theme.name} - {theme.user.name}</a>
 	{/each}
 </template>
 

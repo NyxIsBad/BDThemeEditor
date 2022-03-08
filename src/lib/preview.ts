@@ -1,5 +1,8 @@
 import {preview} from './stores';
 
+interface Reset {
+	action: 'reset'
+}
 interface SetProperty {
 	action: 'setProperty',
 	variable: string,
@@ -35,8 +38,8 @@ interface ToggleModal {
  * Send a `postMessage` to the previewer.
  * @param message The action and data to be used.
  */
-export const previewAction = (message: (SetProperty|RemoveProperty|AddFont|RemoveFont|AddAddon|RemoveAddon|ToggleModal)) => {
+export const previewAction = (message: (Reset|SetProperty|RemoveProperty|AddFont|RemoveFont|AddAddon|RemoveAddon|ToggleModal)) => {
 	preview.subscribe(e => {
-		e?.contentWindow.postMessage(JSON.stringify(message), '*');
+		e?.contentWindow?.postMessage(JSON.stringify(message), '*');
 	})
 }

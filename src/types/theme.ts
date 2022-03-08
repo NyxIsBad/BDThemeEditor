@@ -1,5 +1,4 @@
 import type {Inputs} from './inputs';
-import type {IDev} from './dev';
 import type {IAddon} from './addon';
 
 export type Icons = (
@@ -65,7 +64,6 @@ export interface ITheme {
 export interface IStoreTheme {
 	name: string,
   meta: Meta,
-  developer: IDev,
   imports: string[],
   variables: ThemeVars[],
   addons: IAddon[],
