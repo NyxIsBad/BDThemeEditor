@@ -1,24 +1,19 @@
-<script lang="ts" context="module">
-	import type {Load} from '@sveltejs/kit';
-
-	export const load: Load = async({fetch}) => {
-		const req = await fetch('themes.json');
-		const themes = await req.json();
-
-		return {
-			props: { themes	}
-		}
-	}
-</script>
-
 <script lang="ts">
-	export let themes: any[];
+	import {CardGrid, Card, Header} from '$components/page';
+	import type {Theme, User} from '@prisma/client';
+
+	export let themes: (Theme & {user: User})[];
 </script>
 
 <template>
-	{#each themes as theme}
-		<a href="/theme/{theme.name.toLowerCase()}">{theme.name} - {theme.user.name}</a>
-	{/each}
+	<div class="wrap">
+		<Header title="Chose a theme" />
+	</div>
+	<CardGrid>
+		{#each themes as data}
+			<Card {data} />
+		{/each}
+	</CardGrid>
 </template>
 
 <style lang="scss">

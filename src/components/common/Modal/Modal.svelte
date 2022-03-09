@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {fade, scale} from 'svelte/transition';
+	import {fade, fly} from 'svelte/transition';
 	import portal from '$lib/portal';
 
 	/**
@@ -26,7 +26,7 @@
 	{#if visible}
 		<div class="modal-container" use:portal={"#layers"}>
 			<div class="backdrop" transition:fade={{duration: 150}} on:click={close}></div>
-			<div class="modal" transition:scale={{duration: 200, start: 1.02}} style="max-width: {maxWidth}px;">
+			<div class="modal" transition:fly={{duration: 200, y: 5}} style="max-width: {maxWidth}px;">
 				<slot />
 			</div>
 		</div>
@@ -53,7 +53,7 @@
 		right: 0;
 		bottom: 0;
 		left: 0;
-		background: rgb(0 0 0 / .8);
+		background: rgb(0 0 0 / .5);
 	}
 
 	.modal {
@@ -62,5 +62,6 @@
 		width: 100%;
 		border-radius: 4px;
 		background: var(--bg-main);
+		border: 1px solid var(--border-mid);
 	}
 </style>

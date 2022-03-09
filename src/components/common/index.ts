@@ -10,7 +10,6 @@ export {default as MenuItem} from './Menu/MenuItem.svelte';
 
 export {default as Modal} from './Modal/Modal.svelte';
 export {default as ModalBody} from './Modal/ModalBody.svelte';
-export {default as ModalHeader} from './Modal/ModalHeader.svelte';
 export {default as ModalFooter} from './Modal/ModalFooter.svelte';
 
 export {default as RadioGroup} from './RadioGroup/RadioGroup.svelte';

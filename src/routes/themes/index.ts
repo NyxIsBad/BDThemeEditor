@@ -11,6 +11,8 @@ export const get: RequestHandler = async() => {
 
 	return {
 		status: 200,
-		body: themes
+		body: {
+			themes
+		}
 	}
 }
