@@ -4,7 +4,7 @@ import { hsl, columns, radialstatus, discolored } from '../addons';
 
 const theme: Theme = {
 	name: 'Clear Vision',
-	thumbnail: 'https://raw.githubusercontent.com/ClearVision/ClearVision-v6/master/screenshots/6-stable.4.7.9.png',
+	thumbnail: 'https://i.imgur.com/U7UXrEN.png',
 	developer: ClearVision,
 	meta: {
 		name: 'ClearVision',
@@ -32,7 +32,7 @@ const theme: Theme = {
 			--code-font: Consolas, Liberation Mono, Menlo, Courier, monospace;
 			--text-normal: rgb(220, 221, 222);
 			--text-muted: rgb(114, 118, 125);
-			--channels-width: 220px;
+			--channels-width: 240px;
 			--members-width: 240px;
 			--background-shading: 100%;
 			--background-overlay: rgba(0, 0, 0, 0.6);
@@ -790,7 +790,7 @@ const theme: Theme = {
 					type: 'number',
 					props: {
 						variable: 'channels-width',
-						value: 220,
+						value: 240,
 						unit: 'px',
 						title: 'Channels width'
 					}
